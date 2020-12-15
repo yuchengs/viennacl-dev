@@ -292,7 +292,7 @@ void prod_impl(const viennacl::compressed_matrix<NumericT, AlignmentV> & mat,
   if (is_maxwell && double(mat.nnz()) / double(mat.size1()) > 6.4) // less than 10% of threads expected to idle
   {
     if (alpha < NumericT(1) || alpha > NumericT(1) || beta < 0 || beta > 0)
-      compressed_matrix_vec_mul_kernel<8, detail::spmv_alpha_beta, NumericT><<<512, 256>>>(   // experience on a GTX 750 Ti suggests that 8 is a substantially better choice here
+      compressed_matrix_vec_mul_kernel<4, detail::spmv_alpha_beta, NumericT><<<512, 512>>>(   // experience on a GTX 750 Ti suggests that 8 is a substantially better choice here
                                                                     viennacl::cuda_arg<unsigned int>(mat.handle1()),
                                                                     viennacl::cuda_arg<unsigned int>(mat.handle2()),
                                                                     viennacl::cuda_arg<NumericT>(mat.handle()),
@@ -307,7 +307,7 @@ void prod_impl(const viennacl::compressed_matrix<NumericT, AlignmentV> & mat,
                                                                     beta
                                                                    );
     else
-      compressed_matrix_vec_mul_kernel<8, detail::spmv_pure, NumericT><<<512, 256>>>(   // experience on a GTX 750 Ti suggests that 8 is a substantially better choice here
+      compressed_matrix_vec_mul_kernel<4, detail::spmv_pure, NumericT><<<512, 512>>>(   // experience on a GTX 750 Ti suggests that 8 is a substantially better choice here
                                                                     viennacl::cuda_arg<unsigned int>(mat.handle1()),
                                                                     viennacl::cuda_arg<unsigned int>(mat.handle2()),
                                                                     viennacl::cuda_arg<NumericT>(mat.handle()),
